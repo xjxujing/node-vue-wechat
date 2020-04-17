@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const app = express();
 
 // 引入 users.js
@@ -7,6 +8,13 @@ const users = require("./routes/api/users");
 
 // db config
 const db = require("./config/keys").mongoURI;
+
+// 使用 bodyParser 中间件
+// 创建 application/x-www-form-urlencoded 解析
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// 解析json数据
+app.use(bodyParser.json());
 
 // connect to mongodb
 mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true }).then(
