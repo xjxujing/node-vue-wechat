@@ -16,7 +16,7 @@ router.get("/test", (req, res) => {
 });
 
 /**
- * $route POST api/users/test
+ * $route POST api/users/register
  * @desc 返回的请求的 json 数据
  * @access public
  */
@@ -54,6 +54,30 @@ router.post("/register", (req, res) => {
                 });
             });
         }
+    });
+});
+
+/**
+ * $route POST api/users/login
+ * @desc 返回的请求的 json 数据
+ * @access public
+ */
+router.post("/login", (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    // 查询数据库
+    User.findOne({ email }).then((user) => {
+        if (!user) {
+            return res.status(404).json({ msg: "用户不存在" });
+        }
+
+        // 密码匹配
+        bcrypt.compare(password, user.password).then((isMatch) => {
+            if (isMatch) {
+                return res.json({ msg: "succcess" });
+            }
+        });
     });
 });
 
