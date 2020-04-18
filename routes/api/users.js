@@ -76,6 +76,8 @@ router.post("/login", (req, res) => {
         bcrypt.compare(password, user.password).then((isMatch) => {
             if (isMatch) {
                 return res.json({ msg: "succcess" });
+            }else {
+                return res.status(404).json({password: "密码错误！"})
             }
         });
     });
