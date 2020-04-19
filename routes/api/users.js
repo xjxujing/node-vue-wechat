@@ -78,7 +78,7 @@ router.post("/login", (req, res) => {
         // 密码匹配
         bcrypt.compare(password, user.password).then((isMatch) => {
             if (isMatch) {
-                const rule = { id: user.id, name: user.name };
+                const rule = { id: user.id, name: user.name, avatar: use.avatar };
 
                 // jwt.sign("规则", "加密名字", "过期时间", "箭头函数");
                 jwt.sign(rule, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
@@ -90,7 +90,7 @@ router.post("/login", (req, res) => {
                 });
                 // return res.json({ msg: "succcess" });
             } else {
-                return res.status(404).json({ password: "密码错误！" });
+                return res.status(404).json({ msg: "密码错误！" });
             }
         });
     });
@@ -106,6 +106,7 @@ router.get("/current", passpost.authenticate("jwt", { session: false }), (req, r
         id: req.user.id,
         name: req.user.name,
         email: req.user.email,
+        avatar: req.user.avatar,
     });
 });
 
