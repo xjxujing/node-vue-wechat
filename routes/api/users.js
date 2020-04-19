@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
 const keys = require("../../config/keys");
 const User = require("../../models/User");
+const passpost = require("passport");
 
 /**
  * $route GET api/users/test
@@ -78,13 +79,13 @@ router.post("/login", (req, res) => {
         bcrypt.compare(password, user.password).then((isMatch) => {
             if (isMatch) {
                 const rule = { id: user.id, name: user.name };
-                
+
                 // jwt.sign("规则", "加密名字", "过期时间", "箭头函数");
                 jwt.sign(rule, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
                     if (err) throw err;
                     res.json({
                         success: true,
-                        token: "jojo" + token,
+                        token: "Bearer " + token,
                     });
                 });
                 // return res.json({ msg: "succcess" });
@@ -92,6 +93,19 @@ router.post("/login", (req, res) => {
                 return res.status(404).json({ password: "密码错误！" });
             }
         });
+    });
+});
+
+/**
+ * $route GET api/users/current
+ * @desc return current user 验证 token
+ * @access private
+ */
+router.get("/current", passpost.authenticate("jwt", { session: false }), (req, res) => {
+    res.json({
+        id: req.user.id,
+        name: req.user.name,
+        email: req.user.email,
     });
 });
 

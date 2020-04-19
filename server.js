@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const passport = require("passport");
 const app = express();
 
 // 引入 users.js
@@ -13,8 +14,12 @@ const db = require("./config/keys").mongoURI;
 // 创建 application/x-www-form-urlencoded 解析
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// 解析json数据
+// 解析 json数据
 app.use(bodyParser.json());
+
+// 使用 passport
+app.use(passport.initialize());
+require("./config/passport")(passport);
 
 // connect to mongodb
 mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true }).then(
