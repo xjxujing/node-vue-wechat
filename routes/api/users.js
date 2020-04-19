@@ -78,7 +78,7 @@ router.post("/login", (req, res) => {
         // 密码匹配
         bcrypt.compare(password, user.password).then((isMatch) => {
             if (isMatch) {
-                const rule = { id: user.id, name: user.name, avatar: use.avatar };
+                const rule = { id: user.id, name: user.name, avatar: user.avatar };
 
                 // jwt.sign("规则", "加密名字", "过期时间", "箭头函数");
                 jwt.sign(rule, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
