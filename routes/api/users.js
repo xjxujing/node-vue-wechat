@@ -2,7 +2,9 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-var gravatar = require("gravatar");
+const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar");
+const keys = require("../../config/keys");
 const User = require("../../models/User");
 
 /**
@@ -75,9 +77,19 @@ router.post("/login", (req, res) => {
         // 密码匹配
         bcrypt.compare(password, user.password).then((isMatch) => {
             if (isMatch) {
-                return res.json({ msg: "succcess" });
-            }else {
-                return res.status(404).json({password: "密码错误！"})
+                const rule = { id: user.id, name: user.name };
+                
+                // jwt.sign("规则", "加密名字", "过期时间", "箭头函数");
+                jwt.sign(rule, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
+                    if (err) throw err;
+                    res.json({
+                        success: true,
+                        token: "jojo" + token,
+                    });
+                });
+                // return res.json({ msg: "succcess" });
+            } else {
+                return res.status(404).json({ password: "密码错误！" });
             }
         });
     });
