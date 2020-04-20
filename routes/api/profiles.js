@@ -42,7 +42,7 @@ router.post("/add", passpost.authenticate("jwt", { session: false }), (req, res)
 
 /**
  * $route GET api/profiles/latest
- * @desc 创建朋友圈信息接口
+ * @desc 下拉刷新
  * @access private
  */
 router.get("/latest", passpost.authenticate("jwt", { session: false }), (req, res) => {
@@ -56,6 +56,32 @@ router.get("/latest", passpost.authenticate("jwt", { session: false }), (req, re
                 for (let i = 0; i < 3; i++) {
                     if (profiles[i] != null) {
                         newProfiles.push(profiles[i]);
+                    }
+                }
+                res.json(newProfiles);
+            }
+        });
+});
+
+/**
+ * $route GET api/profiles/:page/:size
+ * @desc 上拉加载 10 条 下拉刷新请求 3 条，上拉加载请求 3 条
+ * @access private
+ */
+router.get("/:page/:size", passpost.authenticate("jwt", { session: false }), (req, res) => {
+    Profile.find()
+        .sort({ date: -1 })
+        .then((profiles) => {
+            if (!profiles) {
+                res.status(404).json("没有任何信息");
+            } else {
+                let size = req.params.size;
+                let page = req.params.page;
+                let index = size * (page - 1);
+                let newProfiles = [];
+                for (let i = index; i < size * page; i++) {
+                    if (profiles[i] != null) {
+                        newProfiles.unshift(profiles[i]);
                     }
                 }
                 res.json(newProfiles);
