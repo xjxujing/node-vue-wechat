@@ -40,4 +40,27 @@ router.post("/add", passpost.authenticate("jwt", { session: false }), (req, res)
         });
 });
 
+/**
+ * $route GET api/profiles/latest
+ * @desc 创建朋友圈信息接口
+ * @access private
+ */
+router.get("/latest", passpost.authenticate("jwt", { session: false }), (req, res) => {
+    Profile.find()
+        .sort({ date: -1 })
+        .then((profiles) => {
+            if (!profiles) {
+                res.status(404).json("没有任何消息");
+            } else {
+                let newProfiles = [];
+                for (let i = 0; i < 3; i++) {
+                    if (profiles[i] != null) {
+                        newProfiles.push(profiles[i]);
+                    }
+                }
+                res.json(newProfiles);
+            }
+        });
+});
+
 module.exports = router;
