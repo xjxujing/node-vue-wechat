@@ -16,24 +16,28 @@ router.get("/test", (req, res) => {
 });
 
 /**
- * $route GET api/profiles/add
+ * $route POST api/profiles/add
  * @desc 创建朋友圈信息接口
  * @access private
  */
 router.post("/add", passpost.authenticate("jwt", { session: false }), (req, res) => {
     const profilesFileds = {};
     if (req.body.img) profilesFileds.img = req.body.img;
-    if (req.body.name) profilesFileds.img = req.body.name;
-    if (req.body.text) profilesFileds.img = req.body.text;
+    if (req.body.name) profilesFileds.name = req.body.name;
+    if (req.body.text) profilesFileds.text = req.body.text;
 
     if (req.body.imgs) {
         profilesFileds.imgs = req.body.imgs.split("|");
     }
 
-    // 存储数据
-    // new Profile(profilesFileds).save().then((profile) => {
-    //     res.json("sdf");
-    // });
+    new Profile(profilesFileds)
+        .save()
+        .then((profile) => {
+            res.json(profile);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 });
 
 module.exports = router;
