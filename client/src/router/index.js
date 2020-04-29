@@ -19,13 +19,13 @@ const router = new Router({
 });
 
 // 登录之前只能访问登录或者注册
-// router.beforeEach((to, from, next) => {
-//     const isLogin = localStorage.wxToken ? true : false;
-//     if (to.path == "/login" || to.path == "/register") {
-//         next();
-//     } else {
-//         isLogin ? next() : next("/login");
-//     }
-// });
+router.beforeEach((to, from, next) => {
+    const isLogin = localStorage.wxToken ? true : false;
+    if (to.path == "/login" || to.path == "/register") {
+        next();
+    } else {
+        isLogin ? next() : next("/login");
+    }
+});
 
 export default router;
