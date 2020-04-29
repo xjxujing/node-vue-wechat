@@ -1,29 +1,31 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from "vue";
+import Router from "vue-router";
+import Index from "../views/Index.vue";
 
-Vue.use(VueRouter)
+Vue.use(Router);
 
-  const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
+const router = new Router({
+    mode: "history",
+    base: process.env.BASE_URL,
+    routes: [
+        {
+            path: "/",
+            name: "index",
+            component: Index
+        },
+        { path: "/login", name: "login", component: () => import("../views/Login.vue") },
+        { path: "/register", name: "register", component: () => import("../views/Register.vue") },
+    ],
+});
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
-})
+// 登录之前只能访问登录或者注册
+// router.beforeEach((to, from, next) => {
+//     const isLogin = localStorage.wxToken ? true : false;
+//     if (to.path == "/login" || to.path == "/register") {
+//         next();
+//     } else {
+//         isLogin ? next() : next("/login");
+//     }
+// });
 
-export default router
+export default router;
