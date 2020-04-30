@@ -5,11 +5,13 @@
     "scripts": {
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
-        "start": "npm run serve"
+        "start": "yarn serve"
     },
     "dependencies": {
         "axios": "^0.19.2",
+        "better-scroll": "^1.12.6",
         "core-js": "^3.6.4",
+        "jwt-decode": "^2.2.0",
         "vue": "^2.6.11",
         "vue-router": "^3.1.6"
     },

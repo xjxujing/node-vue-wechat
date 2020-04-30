@@ -11,10 +11,37 @@ const router = new Router({
         {
             path: "/",
             name: "index",
-            component: Index
+            component: Index,
+            children: [
+                {
+                  path: '',
+                  redirect: '/wchart'
+                },
+                {
+                  path: '/wchart',
+                  name: 'wchart',
+                  component: () => import('../views/Wchart.vue')
+                },
+                {
+                  path: '/abook',
+                  name: 'abook',
+                  component: () => import('../views/AddressBook.vue')
+                },
+                {
+                  path: '/find',
+                  name: 'find',
+                  component: () => import('../views/Find.vue')
+                },
+                {
+                  path: '/mine',
+                  name: 'mine',
+                  component: () => import('../views/Mine.vue')
+                }
+              ]
         },
         { path: "/login", name: "login", component: () => import("../views/Login.vue") },
         { path: "/register", name: "register", component: () => import("../views/Register.vue") },
+        { path: '/circle', name: 'circle', component: () => import('../views/Circle.vue') },
     ],
 });
 
