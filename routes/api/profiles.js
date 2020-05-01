@@ -86,7 +86,8 @@ router.get("/:page/:size", passpost.authenticate("jwt", { session: false }), (re
                 }
                 res.json(newProfiles);
             }
-        });
+        })
+        .catch((err) => res.status(404).json(err));
 });
 
 module.exports = router;
