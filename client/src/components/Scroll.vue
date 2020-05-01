@@ -14,6 +14,17 @@
       <slot></slot>
 
       <!-- 上拉加载 -->
+      <div class="pullup">
+        <div class="clear" v-if="!isDone">
+          <div class="fl">
+            <img width="16" src="../assets/scroll_load.gif" />
+          </div>
+          <div class="fl">加载中.....</div>
+        </div>
+        <div class="list-donetip" v-else>
+          <slot name="doneTip">没有更多数据</slot>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -41,14 +52,14 @@ export default {
 
   mounted() {
     setTimeout(() => {
-      console.log("setTimeout")
+      console.log("setTimeout");
       this._initScroll();
     }, 200);
   },
 
   methods: {
     _initScroll() {
-      console.log(this.$refs.wrapper)
+      console.log(this.$refs.wrapper);
       if (!this.$refs.wrapper) {
         return;
       }
@@ -59,8 +70,8 @@ export default {
 
       // 派发顶部下拉事件，用于下拉刷新
       this.scroll.on("scroll", pos => {
-        console.log(123);
-        console.log(pos.y);
+        console.log(this.scroll.y);
+        console.log("max", this.scroll.maxScrollY);
         //显示下拉刷新loading
         this.dragTip.showLoding = true;
 
@@ -69,29 +80,38 @@ export default {
         }
       });
       // 下拉刷新时，松手时触发pulldown事件，并注册刷新结束事件
-      // this.scroll.on("touchEnd", pos => {
-      //   if (pos.y > 50) {
-      //     this.dragTip.text = "刷新中...";
-      //     //重新初始化
-      //     this.$on("pullrefresh.finishLoad", this.resetParams);
-      //     this.$emit("pulldown", pos);
-      //   }
-      // });
+      this.scroll.on("touchEnd", pos => {
+        if (pos.y > 50) {
+          this.dragTip.text = "刷新中...";
+          //重新初始化
+          this.$emit("pulldown");
+          this.$on("refresh", this.resetParams);
+        }
+      });
 
       // 派发滚动到底部事件，用于上拉加载
-      // this.scroll.on("scrollEnd", () => {
-      //   if (this.scroll.y <= this.scroll.maxScrollY + 50) {
-      //     //所有数据加载完毕后
-      //     this.$on("infinitescroll.loadedDone", () => {
-      //       this.isDone = true;
-      //     });
-      //     //重新初始化
-      //     this.$on("infinitescroll.reInit", () => {
-      //       this.isDone = false;
-      //     });
-      //     this.$emit("pullup"); // 触发pullup事件
-      //   }
-      // });
+      this.scroll.on("scrollEnd", () => {
+        if (this.scroll.y <= this.scroll.maxScrollY + 50) {
+          //所有数据加载完毕后
+          this.$on("loadedDone", () => {
+            this.isDone = true;
+          });
+          //重新初始化
+          this.$on("reInit", () => {
+            this.isDone = false;
+          });
+          this.$emit("pullup"); // 触发pullup事件
+        }
+      });
+    },
+    resetParams() {
+      this.isDone = false;
+      setTimeout(() => {
+        this.dragTip = {
+          text: "下拉刷新",
+          showLoding: false
+        };
+      }, 600);
     }
   }
 };

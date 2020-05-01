@@ -1,36 +1,24 @@
 <template>
-    <div class="circle">
-        <Header 
-            title='朋友圈'
-            :isLeft='true'
-            btn_icon='camera'
-            @rightClick="$router.push('/publish')"
-        ></Header>
-        <div class="container">
-            <!-- <div class="scroll-wrap"> -->
-            <Scroll
-              ref="pullrefresh"
-              @pulldown="loadData"
-              @pullup="loadMore">
-                <div class="head_wrapper">
-                    <div class="user_head">
-                        <span>{{user.name}}</span>
-                        <div class="user_img">
-                          <img :src="user.avatar" alt="" class="head_img">
-                        </div>
-                    </div>
-                </div>
-                <div class="content_wrapper">
-                    <Cell 
-                        v-for="(cricle, index) in cricleList"
-                        :key="index"
-                        :cricleObj='cricle'
-                    ></Cell> 
-                </div>
-            </Scroll>
-            <!-- </div> -->
+  <div class="circle">
+    <Header title="朋友圈" :isLeft="true" btn_icon="camera" @rightClick="$router.push('/publish')"></Header>
+    <div class="container">
+      <!-- <div class="scroll-wrap"> -->
+      <Scroll ref="pullrefresh" @pulldown="loadData" @pullup="loadMore">
+        <div class="head_wrapper">
+          <div class="user_head">
+            <span>{{user.name}}</span>
+            <div class="user_img">
+              <img :src="user.avatar" alt class="head_img" />
+            </div>
+          </div>
         </div>
+        <div class="content_wrapper">
+          <Cell v-for="(cricle, index) in cricleList" :key="index" :cricleObj="cricle"></Cell>
+        </div>
+      </Scroll>
+      <!-- </div> -->
     </div>
+  </div>
 </template>
 
 <script>
@@ -72,7 +60,7 @@ export default {
       this.$axios("/api/profiles/latest").then(res => {
         this.loading = false;
         this.cricleList = [...res.data];
-        this.$refs.pullrefresh.$emit("pullrefresh.finishLoad");
+        this.$refs.pullrefresh.$emit("refresh");
       });
     },
     loadData() {
@@ -81,7 +69,7 @@ export default {
       this.getLatestData();
     },
     loadMore() {
-      // this.getMoreData();
+      this.getMoreData();
     },
     getMoreData() {
       if (this.loading) return;
@@ -92,14 +80,14 @@ export default {
         const result = [...res.data];
         if (result.length > 0) {
           // 拿到结果数据进行遍历 push到列表数组中，并且page+1
-          this.$refs.pullrefresh.$emit("infinitescroll.reInit");
+          // this.$refs.pullrefresh.$emit("reInit");
           result.forEach(item => {
             this.cricleList.push(item);
           });
           this.page++;
         } else {
           // 数组为空，没有更多数据，page不再递增
-          this.$refs.pullrefresh.$emit("infinitescroll.loadedDone");
+          this.$refs.pullrefresh.$emit("loadedDone");
         }
       });
     }
