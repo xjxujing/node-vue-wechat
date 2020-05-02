@@ -59,7 +59,7 @@ export default {
 
   methods: {
     _initScroll() {
-      console.log(this.$refs.wrapper);
+      // console.log(this.$refs.wrapper);
       if (!this.$refs.wrapper) {
         return;
       }

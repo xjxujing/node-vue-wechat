@@ -12,11 +12,14 @@ const profiles = require("./routes/api/profiles");
 const db = require("./config/keys").mongoURI;
 
 // 使用 bodyParser 中间件
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
 // 创建 application/x-www-form-urlencoded 解析
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 // 解析 json数据
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 // 使用 passport
 app.use(passport.initialize());

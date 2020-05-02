@@ -2,7 +2,7 @@
     <header class="header">
         <div class="header-button is-left" v-show="isLeft">
             <i class="fa fa-chevron-left"></i>
-            <button @click="$router.go(-1)">返回</button>
+            <button @click="$router.push('find')">返回</button>
         </div>
         <h1 class="header-title">{{title}}</h1>
         <div class="header-button is-right" v-show="btn_icon">

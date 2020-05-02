@@ -42,6 +42,7 @@ const router = new Router({
         { path: "/login", name: "login", component: () => import("../views/Login.vue") },
         { path: "/register", name: "register", component: () => import("../views/Register.vue") },
         { path: '/circle', name: 'circle', component: () => import('../views/Circle.vue') },
+        { path: '/publish', name: 'publish', component: () => import('../views/Publish') },
     ],
 });
 
