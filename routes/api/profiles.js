@@ -60,6 +60,9 @@ router.get("/latest", passpost.authenticate("jwt", { session: false }), (req, re
                 }
                 res.json(newProfiles);
             }
+        })
+        .catch(() =>{
+            console.log(456)
         });
 });
 
